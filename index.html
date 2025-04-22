@@ -1,0 +1,2292 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DYLAN•BANG | Artistry Cookies</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap");
+
+      :root {
+        --accent: #00f0ff;
+        --accent2: #ff3dff;
+        --dark: #030711;
+        --light: #f7f7f7;
+        --neutral: #626770;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Space Mono", monospace;
+        background-color: var(--dark);
+        color: var(--light);
+        line-height: 1.5;
+        overflow-x: hidden;
+        cursor: none;
+      }
+
+      /* CURSOR STYLES */
+      .cursor-outer {
+        width: 40px;
+        height: 40px;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        border-radius: 50%;
+        position: fixed;
+        pointer-events: none;
+        z-index: 9999;
+        transform: translate(-50%, -50%);
+        transition: width 0.2s, height 0.2s, background-color 0.3s;
+      }
+
+      .cursor-inner {
+        width: 6px;
+        height: 6px;
+        background-color: var(--accent);
+        border-radius: 50%;
+        position: fixed;
+        pointer-events: none;
+        z-index: 9999;
+        transform: translate(-50%, -50%);
+        transition: transform 0.1s;
+      }
+
+      .cursor-hover {
+        width: 60px;
+        height: 60px;
+        background-color: rgba(0, 240, 255, 0.2);
+      }
+
+      .noise {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjc1IiBzdGl0Y2hUaWxlcz0ic3RpdGNoIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjwvZmlsdGVyPjxwYXRoIGZpbHRlcj0idXJsKCNhKSIgb3BhY2l0eT0iLjA1IiBkPSJNMCAwaDMwMHYzMDBIMHoiLz48L3N2Zz4=");
+        pointer-events: none;
+        opacity: 0.3;
+        z-index: 9998;
+      }
+
+      .grain {
+        position: fixed;
+        top: -500px;
+        left: -500px;
+        width: calc(100% + 1000px);
+        height: calc(100% + 1000px);
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        opacity: 0.15;
+        z-index: 9997;
+        pointer-events: none;
+      }
+
+      .container {
+        max-width: 1760px;
+        margin: 0 auto;
+        padding: 0 3vw;
+        position: relative;
+      }
+
+      /* TYPOGRAPHY */
+      h1,
+      h2,
+      h3,
+      h4,
+      .nav-link,
+      .btn,
+      .counter-number,
+      .section-tag {
+        font-family: "Clash Display", sans-serif;
+        font-weight: 600;
+      }
+
+      h1 {
+        font-size: clamp(3rem, 10vw, 6.5rem);
+        line-height: 0.9;
+        margin-bottom: 2rem;
+        text-transform: uppercase;
+      }
+
+      h2 {
+        font-size: clamp(2rem, 6vw, 4rem);
+        line-height: 1;
+        margin-bottom: 2rem;
+      }
+
+      h3 {
+        font-size: clamp(1.5rem, 3vw, 2.5rem);
+        line-height: 1.2;
+        margin-bottom: 1.5rem;
+      }
+
+      p {
+        font-size: clamp(1rem, 1.1vw, 1.1rem);
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+        max-width: 600px;
+      }
+
+      /* NAVIGATION */
+      .nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding: 30px 0;
+        z-index: 100;
+        mix-blend-mode: difference;
+      }
+
+      .nav-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        font-weight: 700;
+        font-size: 1.25rem;
+        text-decoration: none;
+        color: var(--light);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+      }
+
+      .nav-items {
+        display: flex;
+        gap: 3vw;
+      }
+
+      .nav-link {
+        color: var(--light);
+        text-decoration: none;
+        font-size: 0.875rem;
+        position: relative;
+        padding: 5px 0;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 1px;
+        background: var(--accent);
+        transition: width 0.3s ease;
+      }
+
+      .nav-link:hover::after {
+        width: 100%;
+      }
+
+      .mobile-toggle {
+        display: none;
+        background: none;
+        border: none;
+        color: var(--light);
+        font-size: 1.5rem;
+        cursor: pointer;
+      }
+
+      /* HERO SECTION */
+      .hero {
+        position: relative;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 140px 0 80px;
+        overflow: hidden;
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 5vw;
+        align-items: center;
+        width: 100%;
+      }
+
+      .hero-content {
+        position: relative;
+        z-index: 2;
+      }
+
+      .marquee-container {
+        position: absolute;
+        left: 0;
+        right: 0;
+        margin-top: -80px;
+        height: 36px;
+        z-index: 1;
+        overflow: hidden;
+        white-space: nowrap;
+        background-color: var(--accent);
+        color: var(--dark);
+      }
+
+      .marquee {
+        display: inline-block;
+        animation: marquee 20s linear infinite;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        padding: 6px 0;
+        font-size: 0.875rem;
+      }
+
+      .marquee span {
+        margin: 0 10px;
+      }
+
+      @keyframes marquee {
+        0% {
+          transform: translateX(0);
+        }
+        100% {
+          transform: translateX(-50%);
+        }
+      }
+
+      .hero-badge {
+        display: inline-block;
+        background-color: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        color: var(--light);
+        padding: 12px 20px;
+        border-radius: 100px;
+        font-size: 0.875rem;
+        margin-bottom: 2rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+      }
+
+      .hero-title {
+        overflow: hidden;
+      }
+
+      .hero-title span {
+        display: block;
+        overflow: hidden;
+      }
+
+      .hero-title .line {
+        display: block;
+        transform: translateY(100%);
+        animation: reveal 1s forwards 0.5s;
+      }
+
+      @keyframes reveal {
+        to {
+          transform: translateY(0);
+        }
+      }
+
+      .accent-text {
+        color: var(--accent);
+      }
+
+      .accent2-text {
+        color: var(--accent2);
+      }
+
+      .hero-description {
+        color: var(--neutral);
+        max-width: 500px;
+        font-size: clamp(1.125rem, 1.3vw, 1.25rem);
+        margin: 2rem 0;
+      }
+
+      .progress-wrapper {
+        margin: 3rem 0;
+        width: 100%;
+        max-width: 500px;
+      }
+
+      .progress-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+
+      .progress-label {
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--neutral);
+      }
+
+      .progress-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+      }
+
+      .progress-bar {
+        height: 4px;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 100px;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .progress-fill {
+        height: 100%;
+        width: 65%;
+        background: linear-gradient(90deg, var(--accent), var(--accent2));
+        border-radius: 100px;
+        position: relative;
+      }
+
+      .progress-fill::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        animation: shimmer 1.5s infinite;
+      }
+
+      @keyframes shimmer {
+        0% {
+          transform: translateX(-100%);
+        }
+        100% {
+          transform: translateX(100%);
+        }
+      }
+
+      .progress-meta {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 0.75rem;
+        font-size: 0.75rem;
+        color: var(--neutral);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 14px 28px;
+        background-color: transparent;
+        border: 1px solid var(--accent);
+        color: var(--accent);
+        text-decoration: none;
+        font-size: 0.875rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        transition: color 0.3s ease;
+      }
+
+      .btn::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: var(--accent);
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform 0.3s ease;
+        z-index: -1;
+      }
+
+      .btn:hover {
+        color: var(--dark);
+      }
+
+      .btn:hover::before {
+        transform: scaleX(1);
+        transform-origin: left;
+      }
+
+      .btn-icon {
+        margin-left: 10px;
+        transition: transform 0.3s ease;
+      }
+
+      .btn:hover .btn-icon {
+        transform: translateX(5px);
+      }
+
+      .hero-media {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+      }
+
+      .hero-image {
+        position: relative;
+        width: 100%;
+        max-width: 550px;
+        height: 80vh;
+        max-height: 700px;
+        overflow: hidden;
+      }
+
+      .hero-image-inner {
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+        transform: scale(1.2);
+        animation: zoomOut 1.5s forwards 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+      }
+
+      @keyframes zoomOut {
+        to {
+          transform: scale(1);
+        }
+      }
+
+      .hero-image-inner::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to top, rgba(3, 7, 17, 0.7), transparent);
+      }
+
+      .hero-image-glitch {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+        opacity: 0;
+      }
+
+      .glitch-1 {
+        animation: glitch1 4s infinite linear alternate-reverse;
+        background-color: rgba(0, 240, 255, 0.1);
+        background-blend-mode: hue;
+        filter: brightness(1.5) contrast(2);
+      }
+
+      .glitch-2 {
+        animation: glitch2 5s infinite linear alternate-reverse;
+        background-color: rgba(255, 61, 255, 0.1);
+        background-blend-mode: color-dodge;
+        filter: brightness(1.5) contrast(2);
+      }
+
+      @keyframes glitch1 {
+        0%,
+        100% {
+          opacity: 0;
+          transform: translate(0);
+        }
+        10%,
+        15% {
+          opacity: 0.1;
+          transform: translate(-10px, 5px);
+        }
+        20%,
+        25% {
+          opacity: 0;
+          transform: translate(0);
+        }
+        30%,
+        35% {
+          opacity: 0.1;
+          transform: translate(10px, -5px);
+        }
+        40%,
+        100% {
+          opacity: 0;
+          transform: translate(0);
+        }
+      }
+
+      @keyframes glitch2 {
+        0%,
+        100% {
+          opacity: 0;
+          transform: translate(0);
+        }
+        50%,
+        55% {
+          opacity: 0.1;
+          transform: translate(5px, 10px);
+        }
+        60%,
+        65% {
+          opacity: 0;
+          transform: translate(0);
+        }
+        75%,
+        80% {
+          opacity: 0.1;
+          transform: translate(-5px, -10px);
+        }
+        85%,
+        100% {
+          opacity: 0;
+          transform: translate(0);
+        }
+      }
+
+      /* DECORATIVE ELEMENTS */
+      .line-decoration {
+        position: absolute;
+        width: 1px;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.1);
+        z-index: 0;
+      }
+
+      .line-1 {
+        left: 10%;
+      }
+      .line-2 {
+        left: 30%;
+      }
+      .line-3 {
+        left: 50%;
+      }
+      .line-4 {
+        left: 70%;
+      }
+      .line-5 {
+        left: 90%;
+      }
+
+      .glow {
+        position: absolute;
+        width: 400px;
+        height: 400px;
+        border-radius: 100%;
+        filter: blur(150px);
+        z-index: 0;
+      }
+
+      .glow-1 {
+        background-color: rgba(0, 240, 255, 0.15);
+        bottom: 10%;
+        left: 5%;
+      }
+
+      .glow-2 {
+        background-color: rgba(255, 61, 255, 0.1);
+        top: 10%;
+        right: 5%;
+      }
+
+      /* COUNTER SECTION */
+      .counter {
+        position: relative;
+        padding: 140px 0;
+        background-color: rgba(255, 255, 255, 0.02);
+        overflow: hidden;
+      }
+
+      .counter-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 3vw;
+      }
+
+      .counter-item {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .counter-number {
+        font-size: clamp(3rem, 5vw, 4.5rem);
+        line-height: 1;
+        margin-bottom: 1rem;
+        color: var(--light);
+        position: relative;
+        display: inline-block;
+      }
+
+      .counter-number::after {
+        content: "";
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 40px;
+        height: 2px;
+        background-color: var(--accent);
+      }
+
+      .counter-label {
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-size: 0.875rem;
+        color: var(--neutral);
+      }
+
+      /* MISSION SECTION */
+      .mission {
+        position: relative;
+        padding: 180px 0;
+        overflow: hidden;
+      }
+
+      .mission-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8vw;
+        align-items: center;
+      }
+
+      .mission-content {
+        position: relative;
+        z-index: 1;
+      }
+
+      .section-tag {
+        display: inline-block;
+        color: var(--accent);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-size: 0.875rem;
+        margin-bottom: 1.5rem;
+        position: relative;
+      }
+
+      .section-tag::before {
+        content: "";
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 30px;
+        height: 1px;
+        background-color: var(--accent);
+      }
+
+      .mission-title {
+        margin-bottom: 1.5rem;
+      }
+
+      .mission-text {
+        color: var(--neutral);
+        margin-bottom: 2rem;
+      }
+
+      .features {
+        margin-bottom: 2.5rem;
+      }
+
+      .feature-item {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 1.25rem;
+      }
+
+      .feature-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        font-size: 0.75rem;
+        color: var(--accent);
+        border: 1px solid var(--accent);
+        margin-right: 1.5rem;
+        flex-shrink: 0;
+      }
+
+      .feature-text {
+        font-size: 1rem;
+        color: var(--light);
+      }
+
+      .mission-media {
+        position: relative;
+        z-index: 1;
+      }
+
+      .parallax-container {
+        position: relative;
+        width: 100%;
+        height: 600px;
+      }
+
+      .parallax-image {
+        position: absolute;
+        width: 60%;
+        height: 60%;
+        overflow: hidden;
+        box-shadow: 0 20px 80px rgba(0, 0, 0, 0.3);
+      }
+
+      .parallax-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .parallax-1 {
+        top: 0;
+        left: 0;
+      }
+
+      .parallax-2 {
+        bottom: 0;
+        right: 0;
+      }
+
+      /* PRODUCTS SECTION */
+      .products {
+        position: relative;
+        padding: 180px 0;
+        background-color: rgba(255, 255, 255, 0.02);
+        overflow: hidden;
+      }
+
+      .products-header {
+        position: relative;
+        z-index: 1;
+        max-width: 800px;
+        margin: 0 auto 80px;
+        text-align: center;
+      }
+
+      .products-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .product-card {
+        background-color: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 4px;
+        overflow: hidden;
+        transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1),
+          box-shadow 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+      }
+
+      .product-card:hover {
+        transform: translateY(-16px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      }
+
+      .product-image {
+        position: relative;
+        height: 280px;
+        overflow: hidden;
+      }
+
+      .product-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.7s cubic-bezier(0.165, 0.84, 0.44, 1);
+      }
+
+      .product-card:hover .product-image img {
+        transform: scale(1.05);
+      }
+
+      .product-badge {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        padding: 6px 12px;
+        background-color: var(--accent2);
+        color: var(--dark);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-weight: 600;
+        z-index: 2;
+      }
+
+      .product-content {
+        padding: 24px;
+      }
+
+      .product-tag {
+        display: inline-block;
+        padding: 4px 8px;
+        background-color: rgba(0, 240, 255, 0.1);
+        color: var(--accent);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 12px;
+      }
+
+      .product-title {
+        font-size: 1.5rem;
+        margin-bottom: 12px;
+      }
+
+      .product-description {
+        color: var(--neutral);
+        font-size: 0.875rem;
+        margin-bottom: 24px;
+      }
+
+      /* IMPACT SECTION */
+      .impact {
+        position: relative;
+        padding: 180px 0;
+        overflow: hidden;
+      }
+
+      .impact-header {
+        position: relative;
+        z-index: 1;
+        max-width: 800px;
+        margin: 0 auto 80px;
+        text-align: center;
+      }
+
+      .impact-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 30px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .impact-card {
+        position: relative;
+        padding: 40px 24px;
+        background-color: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 4px;
+        transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+        overflow: hidden;
+      }
+
+      .impact-card:hover {
+        transform: translateY(-10px);
+      }
+
+      .impact-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, var(--accent), var(--accent2));
+      }
+
+      .impact-icon {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+        color: var(--accent);
+      }
+
+      .impact-title {
+        font-size: 1.25rem;
+        margin-bottom: 12px;
+      }
+
+      .impact-text {
+        color: var(--neutral);
+        font-size: 0.875rem;
+      }
+
+      /* TESTIMONIALS SECTION */
+      .testimonials {
+        position: relative;
+        padding: 180px 0;
+        background-color: rgba(255, 255, 255, 0.02);
+        overflow: hidden;
+      }
+
+      .testimonials-header {
+        position: relative;
+        z-index: 1;
+        max-width: 800px;
+        margin: 0 auto 80px;
+        text-align: center;
+      }
+
+      .testimonials-container {
+        position: relative;
+        z-index: 1;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .testimonial {
+        position: relative;
+        padding: 40px;
+        background-color: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 4px;
+        margin-bottom: 30px;
+      }
+
+      .testimonial-quote {
+        font-size: 2.5rem;
+        color: var(--accent);
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        opacity: 0.2;
+      }
+
+      .testimonial-text {
+        font-size: 1.25rem;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+        position: relative;
+        z-index: 1;
+        font-style: italic;
+      }
+
+      .testimonial-author {
+        display: flex;
+        align-items: center;
+      }
+
+      .author-image {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        overflow: hidden;
+        margin-right: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .author-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .author-info h4 {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+
+      .author-info p {
+        margin: 0;
+        font-size: 0.875rem;
+        color: var(--neutral);
+      }
+
+      /* FAQ SECTION */
+      .faq {
+        position: relative;
+        padding: 180px 0;
+        overflow: hidden;
+      }
+
+      .faq-header {
+        position: relative;
+        z-index: 1;
+        max-width: 800px;
+        margin: 0 auto 80px;
+        text-align: center;
+      }
+
+      .faq-container {
+        position: relative;
+        z-index: 1;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .faq-item {
+        background-color: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+        margin-bottom: 16px;
+        overflow: hidden;
+      }
+
+      .faq-question {
+        padding: 24px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 1.125rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .faq-icon {
+        font-size: 1.5rem;
+        transition: transform 0.3s ease;
+      }
+
+      .faq-answer {
+        padding: 0 24px 24px;
+        color: var(--neutral);
+        display: none;
+      }
+
+      .faq-item.active .faq-icon {
+        transform: rotate(45deg);
+      }
+
+      .faq-item.active .faq-answer {
+        display: block;
+      }
+
+      /* CTA SECTION */
+      .cta {
+        position: relative;
+        padding: 180px 0;
+        text-align: center;
+        background-color: rgba(255, 255, 255, 0.02);
+        overflow: hidden;
+      }
+
+      .cta-content {
+        position: relative;
+        z-index: 1;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .cta-title {
+        margin-bottom: 1.5rem;
+      }
+
+      .cta-text {
+        color: var(--neutral);
+        font-size: 1.25rem;
+        margin: 0 auto 2.5rem;
+        max-width: 600px;
+      }
+
+      .btn-large {
+        padding: 18px 36px;
+        font-size: 1rem;
+      }
+
+      /* FOOTER */
+      .footer {
+        position: relative;
+        padding: 120px 0 40px;
+        overflow: hidden;
+      }
+
+      .footer-grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 30px;
+        margin-bottom: 80px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .footer-brand {
+        grid-column: span 4;
+      }
+
+      .footer-logo {
+        font-size: 1.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-weight: 700;
+        margin-bottom: 24px;
+      }
+
+      .footer-description {
+        color: var(--neutral);
+        margin-bottom: 24px;
+        font-size: 0.875rem;
+      }
+
+      .social-links {
+        display: flex;
+        gap: 16px;
+      }
+
+      .social-link {
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(255, 255, 255, 0.05);
+        color: var(--light);
+        text-decoration: none;
+        transition: all 0.3s ease;
+      }
+
+      .social-link:hover {
+        background-color: var(--accent);
+        transform: translateY(-5px);
+      }
+
+      .footer-nav {
+        grid-column: 6 / span 3;
+      }
+
+      .footer-title {
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 24px;
+        font-weight: 600;
+      }
+
+      .footer-links {
+        list-style: none;
+      }
+
+      .footer-link {
+        margin-bottom: 12px;
+      }
+
+      .footer-link a {
+        color: var(--neutral);
+        text-decoration: none;
+        transition: color 0.3s ease;
+        font-size: 0.875rem;
+      }
+
+      .footer-link a:hover {
+        color: var(--accent);
+      }
+
+      .footer-contact {
+        grid-column: 9 / span 4;
+      }
+
+      .contact-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 16px;
+        color: var(--neutral);
+        font-size: 0.875rem;
+      }
+
+      .contact-icon {
+        margin-right: 12px;
+        color: var(--accent);
+      }
+
+      .copyright {
+        text-align: center;
+        padding-top: 40px;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        color: var(--neutral);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        position: relative;
+        z-index: 1;
+      }
+
+      /* FLOATING CTA */
+      .floating-cta {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        z-index: 100;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+        pointer-events: none;
+      }
+
+      .floating-cta.visible {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: all;
+      }
+
+      .floating-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 14px 20px;
+        background-color: var(--accent);
+        color: var(--dark);
+        border: none;
+        border-radius: 100px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        text-decoration: none;
+        box-shadow: 0 10px 30px rgba(0, 240, 255, 0.3);
+        cursor: pointer;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .floating-btn:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0, 240, 255, 0.4);
+      }
+
+      .floating-icon {
+        margin-left: 10px;
+      }
+
+      /* LOADER */
+      .loader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: var(--dark);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        transition: opacity 0.5s ease, visibility 0.5s ease;
+      }
+
+      .loader.hidden {
+        opacity: 0;
+        visibility: hidden;
+      }
+
+      .loader-logo {
+        font-size: 2rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 20px;
+      }
+
+      .loader-bar {
+        width: 200px;
+        height: 2px;
+        background-color: rgba(255, 255, 255, 0.1);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .loader-progress {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 0;
+        background: linear-gradient(90deg, var(--accent), var(--accent2));
+      }
+
+      /* RESPONSIVE STYLES */
+      @media (max-width: 1200px) {
+        .counter-grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 40px;
+        }
+
+        .impact-grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 30px;
+        }
+      }
+
+      @media (max-width: 992px) {
+        .hero-grid,
+        .mission-grid {
+          grid-template-columns: 1fr;
+          gap: 60px;
+        }
+
+        .hero-media {
+          justify-content: center;
+        }
+
+        .hero-image {
+          height: 60vh;
+        }
+
+        .products-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .parallax-container {
+          height: 400px;
+        }
+
+        .footer-grid {
+          grid-template-columns: repeat(6, 1fr);
+        }
+
+        .footer-brand {
+          grid-column: span 6;
+        }
+
+        .footer-nav,
+        .footer-contact {
+          grid-column: span 3;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .nav-items {
+          display: none;
+        }
+
+        .mobile-toggle {
+          display: block;
+        }
+
+        .products-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .impact-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .footer-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .footer-brand,
+        .footer-nav,
+        .footer-contact {
+          grid-column: span 1;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .counter-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .btn,
+        .btn-large,
+        .floating-btn {
+          width: 100%;
+        }
+      }
+
+      /* ANIMATIONS */
+      .reveal {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.8s cubic-bezier(0.165, 0.84, 0.44, 1),
+          transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+      }
+
+      .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .slide-left {
+        opacity: 0;
+        transform: translateX(-30px);
+        transition: opacity 0.8s cubic-bezier(0.165, 0.84, 0.44, 1),
+          transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+      }
+
+      .slide-left.active {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      .slide-right {
+        opacity: 0;
+        transform: translateX(30px);
+        transition: opacity 0.8s cubic-bezier(0.165, 0.84, 0.44, 1),
+          transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+      }
+
+      .slide-right.active {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- LOADER -->
+    <div class="loader">
+      <div class="loader-logo">DYLAN•BANG</div>
+      <div class="loader-bar">
+        <div class="loader-progress"></div>
+      </div>
+    </div>
+
+    <!-- VISUAL EFFECTS -->
+    <div class="cursor-outer"></div>
+    <div class="cursor-inner"></div>
+    <div class="noise"></div>
+    <div class="grain"></div>
+
+    <!-- DECORATIVE LINES -->
+    <div class="line-decoration line-1"></div>
+    <div class="line-decoration line-2"></div>
+    <div class="line-decoration line-3"></div>
+    <div class="line-decoration line-4"></div>
+    <div class="line-decoration line-5"></div>
+
+    <!-- GLOWS -->
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+
+    <!-- NAVIGATION -->
+    <nav class="nav">
+      <div class="container nav-container">
+        <a href="#" class="logo" data-cursor-hover>DYLAN•BANG</a>
+        <div class="nav-items">
+          <a href="#mission" class="nav-link" data-cursor-hover>Mission</a>
+          <a href="#products" class="nav-link" data-cursor-hover>Cookies</a>
+          <a href="#impact" class="nav-link" data-cursor-hover>Impact</a>
+          <a href="#faq" class="nav-link" data-cursor-hover>FAQ</a>
+          <a
+            href="https://fundraise.bangcookies.com/collections/north-jersey-chapter-of-jack-and-jill-of-america-inc-1737602402328-dylan-alston-1745105462255"
+            class="nav-link"
+            data-cursor-hover
+            >Support</a
+          >
+        </div>
+        <button class="mobile-toggle" data-cursor-hover>☰</button>
+      </div>
+    </nav>
+
+    <!-- MARQUEE -->
+    <div class="marquee-container">
+      <div class="marquee">
+        <span>Jack & Jill North Jersey Chapter</span> •
+        <span>Arts Education Initiative</span> •
+        <span>Premium Organic Cookies</span> •
+        <span>Support Young Artists</span> •
+        <span>Jack & Jill North Jersey Chapter</span> •
+        <span>Arts Education Initiative</span> •
+        <span>Premium Organic Cookies</span> •
+        <span>Support Young Artists</span>
+      </div>
+    </div>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero-grid">
+          <div class="hero-content">
+            <div class="hero-badge" data-cursor-hover>
+              Jack & Jill Arts Initiative
+            </div>
+            <h1 class="hero-title">
+              <span><span class="line">Fuel Young</span></span>
+              <span
+                ><span class="line"
+                  ><span class="accent-text">Creative</span> Minds</span
+                ></span
+              >
+            </h1>
+            <p class="hero-description">
+              Support arts education through Dylan's premium organic cookie
+              fundraiser with the North Jersey Chapter of Jack and Jill.
+            </p>
+
+            <div class="progress-wrapper">
+              <div class="progress-header">
+                <div class="progress-label">Fundraising Progress</div>
+                <div class="progress-value">$520 / $800</div>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill"></div>
+              </div>
+              <div class="progress-meta">
+                <span>65% Complete</span>
+                <span>12 Days Remaining</span>
+              </div>
+            </div>
+
+            <a
+              href="https://fundraise.bangcookies.com/collections/north-jersey-chapter-of-jack-and-jill-of-america-inc-1737602402328-dylan-alston-1745105462255"
+              class="btn"
+              data-cursor-hover
+            >
+              Get Cookies Now
+              <svg
+                class="btn-icon"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M5 12H19M19 12L12 5M19 12L12 19" />
+              </svg>
+            </a>
+          </div>
+
+          <div class="hero-media">
+            <div class="hero-image">
+              <div
+                class="hero-image-inner"
+                style="background-image: url('/api/placeholder/600/800')"
+              ></div>
+              <div
+                class="hero-image-glitch glitch-1"
+                style="background-image: url('/api/placeholder/600/800')"
+              ></div>
+              <div
+                class="hero-image-glitch glitch-2"
+                style="background-image: url('/api/placeholder/600/800')"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- COUNTER SECTION -->
+    <section class="counter">
+      <div class="container">
+        <div class="counter-grid">
+          <div class="counter-item reveal">
+            <div class="counter-number">52</div>
+            <div class="counter-label">Cookies Sold</div>
+          </div>
+          <div class="counter-item reveal">
+            <div class="counter-number">16</div>
+            <div class="counter-label">Supporters</div>
+          </div>
+          <div class="counter-item reveal">
+            <div class="counter-number">$520</div>
+            <div class="counter-label">Raised So Far</div>
+          </div>
+          <div class="counter-item reveal">
+            <div class="counter-number">12</div>
+            <div class="counter-label">Days Left</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MISSION SECTION -->
+    <section id="mission" class="mission">
+      <div class="container">
+        <div class="mission-grid">
+          <div class="mission-media">
+            <div class="parallax-container">
+              <div class="parallax-image parallax-1" data-speed="0.05">
+                <img src="/api/placeholder/500/500" alt="Child creating art" />
+              </div>
+              <div class="parallax-image parallax-2" data-speed="-0.05">
+                <img src="/api/placeholder/500/500" alt="Art supplies" />
+              </div>
+            </div>
+          </div>
+
+          <div class="mission-content reveal">
+            <div class="section-tag">Our Mission</div>
+            <h2 class="mission-title">
+              Arts Access For <span class="accent-text">Every Child</span>
+            </h2>
+            <p class="mission-text">
+              Hi, I'm Dylan from the North Jersey Chapter of Jack & Jill. I
+              believe creative expression is essential for child development,
+              yet many kids don't have access to quality arts education due to
+              funding cuts.
+            </p>
+            <p class="mission-text">
+              Your support will help bridge this gap by funding essential
+              creative opportunities in our community.
+            </p>
+
+            <div class="features">
+              <div class="feature-item">
+                <div class="feature-icon">+</div>
+                <div class="feature-text">
+                  Provide art supplies to underserved schools
+                </div>
+              </div>
+              <div class="feature-item">
+                <div class="feature-icon">+</div>
+                <div class="feature-text">Fund music and theater workshops</div>
+              </div>
+              <div class="feature-item">
+                <div class="feature-icon">+</div>
+                <div class="feature-text">
+                  Support museum field trips and cultural events
+                </div>
+              </div>
+              <div class="feature-item">
+                <div class="feature-icon">+</div>
+                <div class="feature-text">
+                  Create after-school arts programs
+                </div>
+              </div>
+            </div>
+
+            <a
+              href="https://fundraise.bangcookies.com/collections/north-jersey-chapter-of-jack-and-jill-of-america-inc-1737602402328-dylan-alston-1745105462255"
+              class="btn"
+              data-cursor-hover
+            >
+              Make An Impact
+              <svg
+                class="btn-icon"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M5 12H19M19 12L12 5M19 12L12 19" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRODUCTS SECTION -->
+    <section id="products" class="products">
+      <div class="container">
+        <div class="products-header reveal">
+          <div class="section-tag">Premium Products</div>
+          <h2 class="products-title">
+            Not Your Typical <span class="accent-text">Fundraiser Cookies</span>
+          </h2>
+          <p class="products-description">
+            Bang Cookies creates giant, soft-baked, USDA certified organic
+            cookies using only the highest quality ingredients with no
+            preservatives or artificial flavors.
+          </p>
+        </div>
+
+        <div class="products-grid">
+          <div class="product-card reveal">
+            <div class="product-image">
+              <div class="product-badge">Best Seller</div>
+              <img
+                src="/api/placeholder/600/600"
+                alt="Sea Salt Chocolate Chip Cookie"
+              />
+            </div>
+            <div class="product-content">
+              <div class="product-tag">USDA Organic</div>
+              <h3 class="product-title">Sea Salt Chocolate Chip</h3>
+              <p class="product-description">
+                The perfect balance of sweet and salty with premium organic
+                chocolate chunks in a soft, chewy cookie.
+              </p>
+              <a
+                href="https://fundraise.bangcookies.com/collections/north-jersey-chapter-of-jack-and-jill-of-america-inc-1737602402328-dylan-alston-1745105462255"
+                class="btn"
+                data-cursor-hover
+              >
+                Order Now
+                <svg
+                  class="btn-icon"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M5 12H19M19 12L12 5M19 12L12 19" />
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          <div class="product-card reveal">
+            <div class="product-image">
+              <img
+                src="/api/placeholder/600/600"
+                alt="Triple Chocolate Cookie"
+              />
+            </div>
+            <div class="product-content">
+              <div class="product-tag">USDA Organic</div>
+              <h3 class="product-title">Triple Chocolate</h3>
+              <p class="product-description">
+                For the ultimate chocolate lover - three types of premium
+                organic chocolate in one luxurious cookie.
+              </p>
+              <a
+                href="https://fundraise.bangcookies.com/collections/north-jersey-chapter-of-jack-and-jill-of-america-inc-1737602402328-dylan-alston-1745105462255"
+                class="btn"
+                data-cursor-hover
+              >
+                Order Now
+                <svg
+                  class="btn-icon"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M5 12H19M19 12L12 5M19 12L12 19" />
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          <div class="product-card reveal">
+            <div class="product-image">
+              <img
+                src="/api/placeholder/600/600"
+                alt="White Chocolate Macadamia Nut Cookie"
+              />
+            </div>
+            <div class="product-content">
+              <div class="product-tag">USDA Organic</div>
+              <h3 class="product-title">White Chocolate Macadamia</h3>
+              <p class="product-description">
+                Creamy white chocolate chunks with crunchy macadamia nuts in a
+                soft, chewy cookie base.
+              </p>
+              <a
+                href="https://fundraise.bangcookies.com/collections/north-jersey-chapter-of-jack-and-jill-of-america-inc-1737602402328-dylan-alston-1745105462255"
+                class="btn"
+                data-cursor-hover
+              >
+                Order Now
+                <svg
+                  class="btn-icon"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M5 12H19M19 12L12 5M19 12L12 19" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- IMPACT SECTION -->
+    <section id="impact" class="impact">
+      <div class="container">
+        <div class="impact-header reveal">
+          <div class="section-tag">Creating Change</div>
+          <h2 class="impact-title">
+            The <span class="accent-text">Impact</span> of Your Support
+          </h2>
+          <p class="products-description">
+            When you purchase cookies through this fundraiser, you're directly
+            contributing to arts education and creative opportunities for
+            children.
+          </p>
+        </div>
+
+        <div class="impact-grid">
+          <div class="impact-card reveal">
+            <div class="impact-icon">🎨</div>
+            <h3 class="impact-title">Arts Access</h3>
+            <p class="impact-text">
+              Help bring arts programs to children who wouldn't otherwise have
+              access to creative outlets and education.
+            </p>
+          </div>
+
+          <div class="impact-card reveal">
+            <div class="impact-icon">🧠</div>
+            <h3 class="impact-title">Creative Growth</h3>
+            <p class="impact-text">
+              Support the development of creative thinking, problem-solving, and
+              self-expression skills.
+            </p>
+          </div>
+
+          <div class="impact-card reveal">
+            <div class="impact-icon">❤️</div>
+            <h3 class="impact-title">Community Building</h3>
+            <p class="impact-text">
+              Strengthen community connections through shared cultural
+              experiences and creative collaboration.
+            </p>
+          </div>
+
+          <div class="impact-card reveal">
+            <div class="impact-icon">🌱</div>
+            <h3 class="impact-title">Future Leaders</h3>
+            <p class="impact-text">
+              Help nurture the next generation of creative, compassionate, and
+              innovative leaders.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS SECTION -->
+    <section class="testimonials">
+      <div class="container">
+        <div class="testimonials-header reveal">
+          <div class="section-tag">What People Say</div>
+          <h2 class="testimonials-title">
+            Cookie <span class="accent-text">Supporters</span>
+          </h2>
+        </div>
+
+        <div class="testimonials-container">
+          <div class="testimonial reveal">
+            <div class="testimonial-quote">❝</div>
+            <p class="testimonial-text">
+              These cookies are extraordinary! Not only are they delicious, but
+              supporting arts education makes the experience even more
+              meaningful. I ordered a dozen for my office and everyone was
+              impressed.
+            </p>
+            <div class="testimonial-author">
+              <div class="author-image">
+                <img src="/api/placeholder/100/100" alt="Sarah Johnson" />
+              </div>
+              <div class="author-info">
+                <h4>Sarah Johnson</h4>
+                <p>Happy Supporter</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial reveal">
+            <div class="testimonial-quote">❝</div>
+            <p class="testimonial-text">
+              The Sea Salt Chocolate Chip cookies are absolutely amazing!
+              Knowing that my purchase helps fund arts programs for kids makes
+              it a perfect gift that gives twice.
+            </p>
+            <div class="testimonial-author">
+              <div class="author-image">
+                <img src="/api/placeholder/100/100" alt="Michael Torres" />
+              </div>
+              <div class="author-info">
+                <h4>Michael Torres</h4>
+                <p>Repeat Customer</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ SECTION -->
+    <section id="faq" class="faq">
+      <div class="container">
+        <div class="faq-header reveal">
+          <div class="section-tag">Questions & Answers</div>
+          <h2 class="faq-title">
+            Frequently Asked <span class="accent-text">Questions</span>
+          </h2>
+        </div>
+
+        <div class="faq-container">
+          <div class="faq-item reveal">
+            <div class="faq-question" data-cursor-hover>
+              How do I place an order?
+              <div class="faq-icon">+</div>
+            </div>
+            <div class="faq-answer">
+              Simply click any "Order Now" or "Get Cookies" button on this page,
+              which will take you to our secure ordering page where you can
+              select your cookie varieties and complete your purchase.
+            </div>
+          </div>
+
+          <div class="faq-item reveal">
+            <div class="faq-question" data-cursor-hover>
+              How are the cookies shipped?
+              <div class="faq-icon">+</div>
+            </div>
+            <div class="faq-answer">
+              All cookies are shipped directly from Bang Cookies' facilities
+              within 2-3 days of your order. They use secure packaging to ensure
+              your cookies arrive fresh and intact.
+            </div>
+          </div>
+
+          <div class="faq-item reveal">
+            <div class="faq-question" data-cursor-hover>
+              Are the cookies really organic?
+              <div class="faq-icon">+</div>
+            </div>
+            <div class="faq-answer">
+              Yes! Bang Cookies uses USDA certified organic ingredients and
+              never adds preservatives or artificial flavors. These are premium
+              quality cookies that taste incredible.
+            </div>
+          </div>
+
+          <div class="faq-item reveal">
+            <div class="faq-question" data-cursor-hover>
+              How much of my purchase supports the cause?
+              <div class="faq-icon">+</div>
+            </div>
+            <div class="faq-answer">
+              40% of every purchase goes directly to supporting arts education
+              programs through the North Jersey Chapter of Jack and Jill of
+              America. Your purchase makes a real difference!
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA SECTION -->
+    <section class="cta">
+      <div class="container">
+        <div class="cta-content reveal">
+          <div class="section-tag">Take Action</div>
+          <h2 class="cta-title">
+            Ready to Make a <span class="accent-text">Difference?</span>
+          </h2>
+          <p class="cta-text">
+            Every cookie you purchase helps bring arts programs to children who
+            need them, while treating yourself or someone special to premium
+            organic cookies.
+          </p>
+          <a
+            href="https://fundraise.bangcookies.com/collections/north-jersey-chapter-of-jack-and-jill-of-america-inc-1737602402328-dylan-alston-1745105462255"
+            class="btn btn-large"
+            data-cursor-hover
+          >
+            Get Cookies Now
+            <svg
+              class="btn-icon"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M5 12H19M19 12L12 5M19 12L12 19" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <div class="footer-logo">DYLAN•BANG</div>
+            <p class="footer-description">
+              Supporting arts education through delicious organic cookies with
+              the North Jersey Chapter of Jack and Jill of America.
+            </p>
+            <div class="social-links">
+              <a href="#" class="social-link" data-cursor-hover>
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M12 2.04C6.5 2.04 2 6.53 2 12.06C2 17.06 5.66 21.21 10.44 21.96V14.96H7.9V12.06H10.44V9.85C10.44 7.34 11.93 5.96 14.22 5.96C15.31 5.96 16.45 6.15 16.45 6.15V8.62H15.19C13.95 8.62 13.56 9.39 13.56 10.18V12.06H16.34L15.89 14.96H13.56V21.96C15.9 21.59 18.03 20.37 19.59 18.57C21.15 16.76 22.02 14.47 22 12.06C22 6.53 17.5 2.04 12 2.04Z"
+                  />
+                </svg>
+              </a>
+              <a href="#" class="social-link" data-cursor-hover>
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M22.46 6C21.69 6.35 20.86 6.58 20 6.69C20.88 6.16 21.56 5.32 21.88 4.31C21.05 4.81 20.13 5.16 19.16 5.36C18.37 4.5 17.26 4 16 4C13.65 4 11.73 5.92 11.73 8.29C11.73 8.63 11.77 8.96 11.84 9.27C8.28 9.09 5.11 7.38 3 4.79C2.63 5.42 2.42 6.16 2.42 6.94C2.42 8.43 3.17 9.75 4.33 10.5C3.62 10.5 2.96 10.3 2.38 10V10.03C2.38 12.11 3.86 13.85 5.82 14.24C5.19 14.41 4.53 14.44 3.89 14.31C4.16 15.18 4.69 15.97 5.43 16.56C6.16 17.15 7.05 17.5 8 17.56C6.32 18.89 4.22 19.56 2 19.54C1.61 19.54 1.22 19.52 0.83 19.47C3.07 20.89 5.7 21.64 8.42 21.63C16 21.63 20.13 15.5 20.13 10.15C20.13 9.97 20.13 9.79 20.12 9.62C20.95 9.01 21.67 8.25 22.21 7.39L22.46 6Z"
+                  />
+                </svg>
+              </a>
+              <a href="#" class="social-link" data-cursor-hover>
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M7.8 2H16.2C19.4 2 22 4.6 22 7.8V16.2C22 19.4 19.4 22 16.2 22H7.8C4.6 22 2 19.4 2 16.2V7.8C2 4.6 4.6 2 7.8 2ZM7.6 4C5.6 4 4 5.6 4 7.6V16.4C4 18.4 5.6 20 7.6 20H16.4C18.4 20 20 18.4 20 16.4V7.6C20 5.6 18.4 4 16.4 4H7.6ZM17.25 5.5C17.9404 5.5 18.5 6.05964 18.5 6.75C18.5 7.44036 17.9404 8 17.25 8C16.5596 8 16 7.44036 16 6.75C16 6.05964 16.5596 5.5 17.25 5.5ZM12 7C14.7614 7 17 9.23858 17 12C17 14.7614 14.7614 17 12 17C9.23858 17 7 14.7614 7 12C7 9.23858 9.23858 7 12 7ZM12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9Z"
+                  />
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          <div class="footer-nav">
+            <div class="footer-title">Links</div>
+            <ul class="footer-links">
+              <li class="footer-link">
+                <a href="#mission" data-cursor-hover>Our Mission</a>
+              </li>
+              <li class="footer-link">
+                <a href="#products" data-cursor-hover>Premium Cookies</a>
+              </li>
+              <li class="footer-link">
+                <a href="#impact" data-cursor-hover>Your Impact</a>
+              </li>
+              <li class="footer-link">
+                <a href="#faq" data-cursor-hover>FAQ</a>
+              </li>
+              <li class="footer-link">
+                <a href="https://www.jackandjillinc.org" data-cursor-hover
+                  >Jack & Jill of America</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <div class="footer-contact">
+            <div class="footer-title">Contact</div>
+            <div class="contact-item">
+              <div class="contact-icon">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M20 4H4C2.9 4 2.01 4.9 2.01 6L2 18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM20 8L12 13L4 8V6L12 11L20 6V8Z"
+                  />
+                </svg>
+              </div>
+              <div>dylan.fundraiser@email.com</div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M6.62 10.79C8.06 13.62 10.38 15.94 13.21 17.38L15.41 15.18C15.69 14.9 16.08 14.82 16.43 14.93C17.55 15.3 18.75 15.5 20 15.5C20.55 15.5 21 15.95 21 16.5V20C21 20.55 20.55 21 20 21C10.61 21 3 13.39 3 4C3 3.45 3.45 3 4 3H7.5C8.05 3 8.5 3.45 8.5 4C8.5 5.25 8.7 6.45 9.07 7.57C9.18 7.92 9.1 8.31 8.82 8.59L6.62 10.79Z"
+                  />
+                </svg>
+              </div>
+              <div>(201) 555-0123</div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C10.62 11.5 9.5 10.38 9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5Z"
+                  />
+                </svg>
+              </div>
+              <div>Essex County, New Jersey</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="copyright">
+          &copy; 2025 Dylan's Arts Initiative Fundraiser. All cookies provided
+          by Bang Cookies.
+        </div>
+      </div>
+    </footer>
+
+    <!-- FLOATING CTA -->
+    <div class="floating-cta">
+      <a
+        href="https://fundraise.bangcookies.com/collections/north-jersey-chapter-of-jack-and-jill-of-america-inc-1737602402328-dylan-alston-1745105462255"
+        class="floating-btn"
+        data-cursor-hover
+      >
+        Support Now
+        <svg
+          class="floating-icon"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M5 12H19M19 12L12 5M19 12L12 19" />
+        </svg>
+      </a>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script>
+      // Preloader
+      window.addEventListener("load", () => {
+        const loader = document.querySelector(".loader");
+        const loaderProgress = document.querySelector(".loader-progress");
+
+        // Animate loader progress
+        let width = 0;
+        const interval = setInterval(() => {
+          width += 1;
+          loaderProgress.style.width = width + "%";
+
+          if (width >= 100) {
+            clearInterval(interval);
+            setTimeout(() => {
+              loader.classList.add("hidden");
+            }, 500);
+          }
+        }, 10);
+      });
+
+      // Custom cursor
+      document.addEventListener("mousemove", (e) => {
+        const cursorOuter = document.querySelector(".cursor-outer");
+        const cursorInner = document.querySelector(".cursor-inner");
+
+        cursorOuter.style.left = e.clientX + "px";
+        cursorOuter.style.top = e.clientY + "px";
+
+        cursorInner.style.left = e.clientX + "px";
+        cursorInner.style.top = e.clientY + "px";
+      });
+
+      // Cursor hover effect
+      const cursorHoverElements = document.querySelectorAll(
+        "[data-cursor-hover]"
+      );
+      cursorHoverElements.forEach((element) => {
+        element.addEventListener("mouseenter", () => {
+          document.querySelector(".cursor-outer").classList.add("cursor-hover");
+        });
+
+        element.addEventListener("mouseleave", () => {
+          document
+            .querySelector(".cursor-outer")
+            .classList.remove("cursor-hover");
+        });
+      });
+
+      // Scroll animations
+      function checkScroll() {
+        const elements = document.querySelectorAll(
+          ".reveal, .slide-left, .slide-right"
+        );
+
+        elements.forEach((element) => {
+          const elementPosition = element.getBoundingClientRect().top;
+          const windowHeight = window.innerHeight;
+
+          if (elementPosition < windowHeight - 50) {
+            element.classList.add("active");
+          }
+        });
+
+        // Show/hide floating CTA
+        const floatingCta = document.querySelector(".floating-cta");
+        if (window.scrollY > 700) {
+          floatingCta.classList.add("visible");
+        } else {
+          floatingCta.classList.remove("visible");
+        }
+      }
+
+      // Parallax effect
+      function parallaxScroll() {
+        const parallaxElements = document.querySelectorAll("[data-speed]");
+
+        parallaxElements.forEach((element) => {
+          const speed = parseFloat(element.getAttribute("data-speed"));
+          const yPos = -(window.scrollY * speed);
+
+          element.style.transform = `translateY(${yPos}px)`;
+        });
+      }
+
+      // Initial check
+      window.addEventListener("load", () => {
+        checkScroll();
+      });
+
+      // Check on scroll
+      window.addEventListener("scroll", () => {
+        checkScroll();
+        parallaxScroll();
+      });
+
+      // FAQ toggles
+      const faqQuestions = document.querySelectorAll(".faq-question");
+
+      faqQuestions.forEach((question) => {
+        question.addEventListener("click", () => {
+          const faqItem = question.parentElement;
+          const faqIcon = question.querySelector(".faq-icon");
+
+          // Toggle active class
+          faqItem.classList.toggle("active");
+
+          // Change icon
+          if (faqItem.classList.contains("active")) {
+            faqIcon.textContent = "−";
+          } else {
+            faqIcon.textContent = "+";
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
